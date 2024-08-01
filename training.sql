@@ -125,3 +125,41 @@
 -- and dea.date = vac.date
 -- WHERE dea.continent IS NOT NULL
 -- ORDER BY dea.continent, dea.location);
+
+
+-- creating a view for data visualization later
+
+-- CREATE view PercentPopulationVaccinated as 
+-- (SELECT dea.continent, dea.location, dea.date, dea.population, vac.new_vaccinations,
+-- SUM(vac.new_vaccinations) OVER (PARTITION BY dea.location ORDER BY dea.location, dea.date) AS RollingPeopleVaccinated
+-- FROM covidimpact.coviddeaths AS dea
+-- JOIN covidimpact.covidvaccinations AS vac
+-- ON dea.location = vac.location
+-- and dea.date = vac.date
+-- WHERE dea.continent IS NOT NULL
+-- ORDER BY dea.continent, dea.location);
+
+-- somehow above method didnt work but the below method works
+
+-- CREATE VIEW PercentPopulationVaccinated AS 
+-- SELECT 
+--     dea.continent, 
+--     dea.location, 
+--     dea.date, 
+--     dea.population, 
+--     vac.new_vaccinations,
+--     SUM(vac.new_vaccinations) OVER (PARTITION BY dea.location ORDER BY dea.date) AS RollingPeopleVaccinated
+-- FROM 
+--     covidimpact.coviddeaths AS dea
+-- JOIN 
+--     covidimpact.covidvaccinations AS vac
+-- ON 
+--     dea.location = vac.location
+-- AND 
+--     dea.date = vac.date
+-- WHERE 
+--     dea.continent IS NOT NULL;
+
+-- now to query the view
+-- select *
+-- from covidimpact.percentpopulationvaccinated;
